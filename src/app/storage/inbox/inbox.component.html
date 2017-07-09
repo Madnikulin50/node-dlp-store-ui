@@ -1,0 +1,131 @@
+<div class="animate">
+	<div class="inbox-container-wrap">
+		<div class="inbox-container">
+			<div class="col email-options ps-container">
+				<div class="padding-15">
+					<!--<div class="butt-container">
+						<a href="javascript:void(0)" class="btn btn-primary btn-block btn-rounded">Compose</a>
+					</div>-->
+					<ul class="main-options">
+						<li class="activeli">
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Inbox</span>
+								<span class="label label-pill label-primary middle pull-right">{{numUnreadedInInbox}}</span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Junk Mail</span>
+							</a>
+						</li>
+						<!--<li>
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Drafts</span>
+								<span class="label label-pill label-danger middle pull-right">16</span>
+							</a>
+						</li>
+						<li>
+							<a href="">
+								<span class="title"> &nbsp; Sent</span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Trash</span>
+							</a>
+						</li>
+						<hr class="poor">
+						<h5>LABELS</h5>
+						<li>
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Clients <i class="fa fa-stop pull-right faorange"></i></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Social <i class="fa fa-stop pull-right fayellow"></i></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Family <i class="fa fa-stop pull-right facyan"></i></span>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:void(0)">
+								<span class="title"> &nbsp; Friends <i class="fa fa-stop pull-right fapurple"></i></span>
+							</a>
+						</li>-->
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="message-list-wrapper">
+			<div class="searchbox">
+				<!--<span class="sebox">Inbox</span> (14 unread) <i class="fa fa-envelope-o"></i>-->
+				<input type="text" class="form-control" id="exampleInputEmail1" #ctrl="ngModel" [(ngModel)]="filter" (ngModelChange)="onFilterChange($event)" placeholder="Search Inbox...">
+        <button type="button" (click)="onPrevPage()" class="btn btn-primary btn-rounded pull-left"><i class="fa fa-backward"></i></button>
+		<button type="button" (click)="onRefresh()" class="btn btn-primary btn-rounded pull-left"><i class="fa fa-refresh"></i></button>
+        <button type="button" (click)="onNextPage()" class="btn btn-primary btn-rounded pull-right"><i class="fa fa-forward"></i></button>
+			</div>
+			<div class="wrap-list">
+				<div class="messages-list">
+					<ul>
+						<li *ngFor="let message of messages" class="messages-item">
+							<a (click)="onMessageClick(message.id)" href="javascript:void(0)">
+								<div class="leftist"><i [className]="message.typeClass" class="fa"></i><i *ngIf="message.numAttachments > 0" class="fa fa-paperclip"></i>
+								</div>
+								<span class="messages-item-actor">{{message.from}}</span>
+								<span class="date-class text-muted pull-right">{{message.date}}</span>
+                <span class="messages-item-actor"><i class="fa fa-caret-right"></i>&nbsp;{{message.to}}</span>
+								<span class="messages-item-content"><p>{{message.subject}}</p></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="text-wrapper bg-white">
+			<div *ngIf="messageSelected" class="wrap-message">
+				<div class="n0-scroll">
+					<div class="message-topic">
+            <i [className]="selectedMessage.typeClass + ' m-r-xs text-primary'" class="fa "> </i>
+						<!---<i class="fa fa-star m-r-xs text-primary"></i>-->{{selectedMessage.subject}}
+            <span class="pull-right text-muted">
+              <a href=""><i class="fa fa-reply"></i></a>
+              <a (click)="onMessageDelete(selectedMessage.id)" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a>
+            </span>
+					</div>
+					<div class="message-sender">
+						<!--<img class="img-circle sender-img m-r-xs" src="assets/images/flat-avatar.png" alt="">-->
+						<a href="javascript:void(0)">{{selectedMessage.from}}</a> to <a href="javascript:void(0)">{{selectedMessage.to}}</a> <!--&nbsp;<i class="fa fa-caret-square-o-down"></i>-->
+						<small class="pull-right m-t-sm">
+							<span *ngIf="selectedMessage.numAttachments > 0"><i class="fa fa-paperclip"></i> &nbsp;<a href="javascript:;">({{selectedMessage.numAttacments}})</a> &nbsp;&nbsp;</span>{{selectedMessage.date}}
+						</small>
+					</div>
+          <div class="message-sender message-props">
+            <span *ngIf="selectedMessage.userAgentPresent">
+              <i *ngFor="let userAgentElem of selectedMessage.userAgentElems" [className]="userAgentElem.className +' fa  m-r-xs text-primary'"> </i>
+            </span>
+						<a *ngFor="let prop of selectedMessage.props" class="messages-prop-item" (click)="onAddToMask(prop.key, prop.value)" href="javascript:void(0)">
+							<span>{{prop.title}}</span>
+               :
+							<span>{{prop.value}}</span>
+              ;
+						</a>
+          </div>
+				</div>
+				<div class="message-content">{{selectedMessage.body}}
+					<!-- <p>Hi Peter,</p>
+					<p>Thanks for the e-mail. It is always nice to hear from people, especially from you, Scott.</p>
+					<p>I have not got any reply, a positive or negative one, from Seibido yet.<br>Let's wait and hope that it will make a BOOK.</p>
+					<p>Have you finished your paperwork for Kaken and writing academic articles?<br>If you have some free time in the near future, I want to meet you and explain to you our next project.</p>
+					<p>Why not drink out in Hiroshima if we are accepted?<br>We need to celebrate ourselves, don't we?<br>Let's have a small end-of-the-year party!</p> <p>Sincerely, K. Nakagawa</p> -->
+				</div>
+				<div class="messagefooter">
+					<button type="button" class="btn btn-primary btn-rounded pull-right"><i class="fa fa-plus">&nbsp;</i><i class="fa fa-tag"></i></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
